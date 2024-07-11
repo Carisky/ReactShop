@@ -1,0 +1,34 @@
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 16px; /* Adjust gap size as needed */
+    padding: 16px; /* Adjust padding as needed */
+  }
+  
+  /* Add responsive design for smaller screens */
+  @media (max-width: 768px) {
+    .gridContainer {
+      grid-template-columns: 1fr;
+      overflow-x: auto;
+      display: flex;
+    }
+  
+    .gridContainer > * {
+      flex: 0 0 auto;
+      width: calc(100% / 3);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .gridContainer {
+      grid-template-columns: 1fr;
+      overflow-x: auto;
+      display: flex;
+    }
+  
+    .gridContainer > * {
+      flex: 0 0 auto;
+      width: 100%;
+    }
+  }
+  
