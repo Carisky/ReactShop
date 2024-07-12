@@ -6,7 +6,5 @@ namespace ReactShop.Models
         public required string Address { get; set; }
         public required string Fullname { get; set; }
         public required PaymentInfo PaymentInfo { get; set; }
-
-        public ICollection<OrderProduct> OrderProducts { get; set; }
     }
 }

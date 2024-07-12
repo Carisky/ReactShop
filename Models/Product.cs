@@ -9,6 +9,5 @@
         public string ImageUrl { get; set; }
         public string[] Tags { get; set; }
         
-        public ICollection<OrderProduct> OrderProducts { get; set; }
     }
 }
