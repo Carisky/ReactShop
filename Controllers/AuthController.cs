@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ReactShop.Models;
@@ -48,6 +49,13 @@ namespace ReactShop.Controllers
             // Replace with your logic to fetch user role from database or any other source
             // For demonstration purposes, returning 'admin' if username is 'test'; otherwise 'user'
             return username == "test" ? "admin" : "user";
+        }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpGet("admin-only")]
+        public IActionResult AdminOnlyEndpoint()
+        {
+            return Ok("This is an admin-only endpoint.");
         }
     }
 }

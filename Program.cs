@@ -1,10 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 using ReactShop.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 // Add services to the container.
 ServiceLoader.ConfigureServices(builder.Services, builder.Configuration);
@@ -26,8 +26,6 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-
-
 
 // Ensure database connection
 using (var scope = app.Services.CreateScope())
@@ -56,7 +54,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 // Enable CORS
-app.UseCors("ReactPolicy");
+app.UseCors("AllowReactApp");
 
 // Add authentication and authorization middleware
 app.UseAuthentication();

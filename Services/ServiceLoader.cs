@@ -36,7 +36,7 @@ namespace ReactShop.Services
             services.AddScoped<IProductService, ProductService>();
 
             // JWT Authentication
-            var key = Encoding.ASCII.GetBytes("Yolka_today22");
+            var key = Encoding.ASCII.GetBytes("my-32-character-ultra-secure-and-ultra-long-secret");
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -56,7 +56,10 @@ namespace ReactShop.Services
             });
 
             // Add Authorization
-            services.AddAuthorization();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
+            });
         }
     }
 }
