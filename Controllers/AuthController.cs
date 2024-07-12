@@ -31,7 +31,7 @@ namespace ReactShop.Controllers
                         new Claim(ClaimTypes.Name, userLogin.Username),
                         new Claim(ClaimTypes.Role, role) // Add Role claim dynamically
                     }),
-                    Expires = DateTime.UtcNow.AddHours(1),
+                    Expires = DateTime.UtcNow.AddHours(12),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -49,13 +49,6 @@ namespace ReactShop.Controllers
             // Replace with your logic to fetch user role from database or any other source
             // For demonstration purposes, returning 'admin' if username is 'test'; otherwise 'user'
             return username == "test" ? "admin" : "user";
-        }
-
-        [Authorize(Policy = "AdminOnly")]
-        [HttpGet("admin-only")]
-        public IActionResult AdminOnlyEndpoint()
-        {
-            return Ok("This is an admin-only endpoint.");
         }
     }
 }
