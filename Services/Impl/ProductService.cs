@@ -13,24 +13,24 @@ namespace ReactShop.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Product>> GetAllProducts()
+        public async Task<IEnumerable<Product>> GetAll()
         {
             return await _context.Products.ToListAsync();
         }
 
-        public async Task<Product> GetProductById(int id)
+        public async Task<Product> GetById(int id)
         {
             return await _context.Products.FindAsync(id);
         }
 
-        public async Task<Product> AddProduct(Product product)
+        public async Task<Product> Add(Product product)
         {
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
             return product;
         }
 
-        public async Task<Product> UpdateProduct(int id, Product product)
+        public async Task<Product> Update(int id, Product product)
         {
             var existingProduct = await _context.Products.FindAsync(id);
             if (existingProduct != null)
@@ -42,7 +42,7 @@ namespace ReactShop.Services
             return existingProduct;
         }
 
-        public async Task DeleteProduct(int id)
+        public async Task Delete(int id)
         {
             var productToRemove = await _context.Products.FindAsync(id);
             if (productToRemove != null)
