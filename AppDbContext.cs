@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     // public DbSet<YourEntity> YourEntities { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
+    public DbSet<User> Users { get; set; }
 
     // Define your Custom rels here
     protected override void OnModelCreating(ModelBuilder modelBuilder)
