@@ -15,9 +15,7 @@ export default function AuthForm() {
     try {
       const response = await axios.post("/auth/login", formData);
       const { token } = response.data;
-      console.log(UserService.isAdmin())
       UserService.setUser(token);
-      
     } catch (error) {
       console.error("Login error:", error);
       

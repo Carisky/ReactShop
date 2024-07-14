@@ -1,23 +1,24 @@
+// ProductsGrid.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import style from './style.module.css'; // CSS module for styling
+import style from './style.module.css';
 import Product from '../UI/Product/Product';
+import ProductsService from '../../Services/ProductsService';
 
 const ProductsGrid = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const productsData = await ProductsService.fetchProducts();
+        setProducts(productsData);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
     fetchProducts();
   }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get('/products');
-      setProducts(response.data);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    }
-  };
 
   return (
     <div className={style.gridContainer}>

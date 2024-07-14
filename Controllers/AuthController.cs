@@ -16,10 +16,10 @@ namespace ReactShop.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] UserLogin userLogin)
         {
-            // Replace with your user validation logic
+            
             if (userLogin.Username == "test" && userLogin.Password == "password")
             {
-                // Example: Fetch user role from database or any logic
+                
                 string role = GetUserRoleFromDatabase(userLogin.Username);
 
                 var tokenHandler = new JwtSecurityTokenHandler();
@@ -29,9 +29,9 @@ namespace ReactShop.Controllers
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim(ClaimTypes.Name, userLogin.Username),
-                        new Claim(ClaimTypes.Role, role) // Add Role claim dynamically
+                        new Claim(ClaimTypes.Role, role) 
                     }),
-                    Expires = DateTime.UtcNow.AddHours(12),
+                    Expires = DateTime.UtcNow.AddSeconds(10),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -43,11 +43,11 @@ namespace ReactShop.Controllers
             return Unauthorized();
         }
 
-        // Example method to fetch user role from database
+        
         private static string GetUserRoleFromDatabase(string username)
         {
-            // Replace with your logic to fetch user role from database or any other source
-            // For demonstration purposes, returning 'admin' if username is 'test'; otherwise 'user'
+            
+            
             return username == "test" ? "admin" : "user";
         }
     }

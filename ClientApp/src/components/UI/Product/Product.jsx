@@ -8,7 +8,7 @@ const Product = ({ product }) => {
       <Link to={`/products/${product.id}`}>
         <img
           className={style.image}
-          src={`https://localhost:7200/ProductImages/${product.imageUrl}`}
+          src={`ProductImages/${product.imageUrl}`}
           alt={product.name}
         />
       </Link>

@@ -22,7 +22,7 @@ namespace ReactShop.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var products = await _productService.GetAllProducts();
+            var products = await _productService.GetAll();
             return Ok(products);
         }
 
@@ -30,7 +30,7 @@ namespace ReactShop.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var product = await _productService.GetProductById(id);
+            var product = await _productService.GetById(id);
             if (product == null)
             {
                 return NotFound();
@@ -44,7 +44,7 @@ namespace ReactShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _productService.AddProduct(product);
+                await _productService.Add(product);
                 return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
             }
             return BadRequest(ModelState);
@@ -63,7 +63,7 @@ namespace ReactShop.Controllers
             {
                 try
                 {
-                    await _productService.UpdateProduct(id, product);
+                    await _productService.Update(id, product);
                 }
                 catch (Exception)
                 {
@@ -85,19 +85,19 @@ namespace ReactShop.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var product = await _productService.GetProductById(id);
+            var product = await _productService.GetById(id);
             if (product == null)
             {
                 return NotFound();
             }
 
-            await _productService.DeleteProduct(id);
+            await _productService.Delete(id);
             return NoContent();
         }
 
         private async Task<bool> ProductExists(int id)
         {
-            var product = await _productService.GetProductById(id);
+            var product = await _productService.GetById(id);
             return product != null;
         }
     }

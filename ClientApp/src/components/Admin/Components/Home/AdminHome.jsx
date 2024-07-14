@@ -38,7 +38,7 @@ export default function AdminHome() {
 
   const handleCreateArticle = () => {
     const token = UserService.getUser();
-    // Convert comma-separated tags string to an array
+    
     const tagsArray = newArticle.tags.split(',').map(tag => tag.trim());
     const articleData = {
       ...newArticle,
@@ -52,8 +52,8 @@ export default function AdminHome() {
     })
     .then(response => {
       console.log('Article created successfully:', response.data);
-      fetchArticles(); // Refresh articles after creating
-      setNewArticle({ // Clear the new article form
+      fetchArticles(); 
+      setNewArticle({ 
         name: '',
         price: 0,
         amount: 0,
@@ -89,12 +89,12 @@ export default function AdminHome() {
     })
     .then(response => {
       console.log('Article deleted successfully:', response.data);
-      fetchArticles(); // Refresh articles after deleting
-      setDeleteDialogOpen(false); // Close the delete confirmation dialog
+      fetchArticles(); 
+      setDeleteDialogOpen(false); 
     })
     .catch(error => {
       console.error('Error deleting article:', error);
-      setDeleteDialogOpen(false); // Close the delete confirmation dialog on error
+      setDeleteDialogOpen(false); 
     });
   };
 

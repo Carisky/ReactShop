@@ -26,7 +26,7 @@ namespace ReactShop.Controllers
         [HttpGet("articles")]
         public async Task<IActionResult> AdminArticlesAsync()
         {
-            var products = await _productService.GetAllProducts();
+            var products = await _productService.GetAll();
             return Ok(products);
         }
 
@@ -39,7 +39,7 @@ namespace ReactShop.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _productService.AddProduct(article);
+            await _productService.Add(article);
             return CreatedAtAction(nameof(GetArticleByIdAsync), new { id = article.Id }, article);
         }
 
@@ -47,7 +47,7 @@ namespace ReactShop.Controllers
         [HttpGet("articles/{id}")]
         public async Task<IActionResult> GetArticleByIdAsync(int id)
         {
-            var article = await _productService.GetProductById(id);
+            var article = await _productService.GetById(id);
             if (article == null)
             {
                 return NotFound();
@@ -59,13 +59,13 @@ namespace ReactShop.Controllers
         [HttpDelete("articles/{id}")]
         public async Task<IActionResult> DeleteArticleAsync(int id)
         {
-            var article = await _productService.GetProductById(id);
+            var article = await _productService.GetById(id);
             if (article == null)
             {
                 return NotFound();
             }
 
-            await _productService.DeleteProduct(article.Id);
+            await _productService.Delete(article.Id);
             return NoContent();
         }
     }
