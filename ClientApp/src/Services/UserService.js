@@ -32,7 +32,7 @@ class UserService {
     }
     
     const decodedToken = parseJwt(token);
-    return decodedToken.role === "admin";
+    return decodedToken.role === "Admin";
   }
 }
 

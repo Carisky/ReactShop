@@ -1,11 +1,12 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using ReactShop.Models;
+using ReactShop.Services;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ReactShop.Controllers
 {
@@ -13,14 +14,19 @@ namespace ReactShop.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] UserLogin userLogin)
+        private readonly IAuthService _authService;
+
+        public AuthController(IAuthService authService)
         {
-            
-            if (userLogin.Username == "test" && userLogin.Password == "password")
+            _authService = authService;
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] UserLogin userLogin)
+        {
+            if (await _authService.ValidateUser(userLogin.Username, userLogin.Password))
             {
-                
-                string role = GetUserRoleFromDatabase(userLogin.Username);
+                string role = await _authService.GetUserRole(userLogin.Username);
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes("my-32-character-ultra-secure-and-ultra-long-secret");
@@ -29,7 +35,7 @@ namespace ReactShop.Controllers
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim(ClaimTypes.Name, userLogin.Username),
-                        new Claim(ClaimTypes.Role, role) 
+                        new Claim(ClaimTypes.Role, role)
                     }),
                     Expires = DateTime.UtcNow.AddSeconds(10),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -41,14 +47,6 @@ namespace ReactShop.Controllers
             }
 
             return Unauthorized();
-        }
-
-        
-        private static string GetUserRoleFromDatabase(string username)
-        {
-            
-            
-            return username == "test" ? "admin" : "user";
         }
     }
 }
