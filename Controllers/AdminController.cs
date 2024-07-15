@@ -23,6 +23,13 @@ namespace ReactShop.Controllers
         }
 
         [Authorize(Policy = "AdminOnly")]
+        [HttpGet("validation")]
+        public IActionResult AdminValidate()
+        {
+            return Ok();
+        }
+
+        [Authorize(Policy = "AdminOnly")]
         [HttpGet("articles")]
         public async Task<IActionResult> AdminArticlesAsync()
         {

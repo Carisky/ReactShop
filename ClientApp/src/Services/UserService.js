@@ -34,6 +34,25 @@ class UserService {
     const decodedToken = parseJwt(token);
     return decodedToken.role === "Admin";
   }
+
+  static async validateAdmin() {
+    const token = this.getUser();
+    if (!token) throw new Error("No token found");
+    let options = {}
+    options.headers = {
+      ...options.headers,
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json"
+    };
+
+    const response = await fetch("/admin/validation/",options);
+    if (!response.ok) {
+      return false
+    }return true
+
+
+  }
+
 }
 
 function parseJwt(token) {

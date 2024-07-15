@@ -3,8 +3,9 @@ import { useForm, Controller } from "react-hook-form";
 import { TextField, Button } from "@mui/material";
 import axios from "axios";
 import UserService from "../../../Services/UserService";
-
+import {useNavigate} from "react-router-dom"
 export default function AuthForm() {
+  const navigate = useNavigate()
   const {
     control,
     handleSubmit,
@@ -16,9 +17,9 @@ export default function AuthForm() {
       const response = await axios.post("/auth/login", formData);
       const { token } = response.data;
       UserService.setUser(token);
+      navigate("/admin")
     } catch (error) {
       console.error("Login error:", error);
-      
     }
   };
 
