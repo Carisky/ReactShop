@@ -4,12 +4,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
 import { Button } from 'reactstrap';
 import style from './style.module.css';
-import PaymentModal from '../../Forms/PaymentModal/PaymentModal';
 import ProductsService from '../../../Services/ProductsService';
+import RecomendedProducts from '../../../Services/RecomendedProducts';
+import CartService from '../../../Services/CartService';
+import { Container } from '@mui/material';
 
 export default function ProductDetails() {
   const [product, setProduct] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -18,7 +19,11 @@ export default function ProductDetails() {
       try {
         const productData = await ProductsService.fetchProductDetails(productId);
         setProduct(productData);
+        productData.tags.map((tag)=>{
+          RecomendedProducts.increment(tag)
+        })
 
+        
         // You can add logic here to handle tags if needed
       } catch (error) {
         console.error('Error fetching product details:', error);
@@ -37,13 +42,6 @@ export default function ProductDetails() {
     backgroundColor: '#000',
   };
 
-  const handleOpen = () => {
-    setOpenModal(true);
-  };
-
-  const handleClose = () => {
-    setOpenModal(false);
-  };
 
   return (
     <div className={style.productDetailsContainer}>
@@ -53,13 +51,21 @@ export default function ProductDetails() {
       <p>Price: ${product.price}</p>
       <Divider sx={dividerSX} />
       <p>Amount: {product.amount}</p>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
-        Open Payment Form
+      <Container sx={{
+        display:"flex",
+        justifyContent:"space-around"
+      }}>
+      <Button variant="contained" color="primary" onClick={()=>{
+        CartService.addItem(product.id, 1);
+      }}>
+        Add To Cart
       </Button>
-      <PaymentModal open={openModal} handleClose={handleClose} />
       <Button variant="contained" color="secondary" onClick={() => navigate('/')}>
         Back to Products
       </Button>
+      </Container>
+      
+
     </div>
   );
 }
