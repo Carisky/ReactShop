@@ -1,0 +1,13 @@
+.image {
+  background-color: aquamarine;
+  height: 40vh;
+  aspect-ratio: 1/1;
+}
+.description {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  width: 30vw;
+}
