@@ -7,6 +7,7 @@ const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
 export default function Chat() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [messageInput, setMessageInput] = useState('');
 
   const handleOpen = () => {
     setOpen(true);
@@ -17,21 +18,21 @@ export default function Chat() {
   };
 
   const handleSendMessage = async () => {
-    const userMessage = document.getElementById('message').value;
-
     // Add the user message to the chat interface
     const newUserMessage = {
-      content: userMessage,
+      content: messageInput,
       sender: 'user',
     };
-    setMessages([...messages, newUserMessage]);
+
+    // Update messages state using functional update to ensure it's up-to-date
+    setMessages(prevMessages => [...prevMessages, newUserMessage]);
 
     // Prepare the request body
     const requestBody = {
       model: "gpt-4o",
       messages: [
         { role: 'system', content: 'You are a helpful assistant.' },
-        { role: 'user', content: userMessage },
+        { role: 'user', content: messageInput },
       ],
     };
 
@@ -58,11 +59,23 @@ export default function Chat() {
         content: botMessage,
         sender: 'bot',
       };
-      setMessages([...messages, newBotMessage]);
+
+      // Update messages state again using functional update to ensure it's up-to-date
+      setMessages(prevMessages => [...prevMessages, newBotMessage]);
+
+      // Clear the message input field
+      setMessageInput('');
 
     } catch (error) {
       console.error('Error fetching from OpenAI:', error);
       // Handle error (e.g., show error message to user)
+    }
+  };
+
+  // Handle sending messages on Ctrl + Enter
+  const handleKeyDown = (event) => {
+    if (event.ctrlKey && event.key === 'Enter') {
+      handleSendMessage();
     }
   };
 
@@ -93,6 +106,9 @@ export default function Chat() {
             variant="outlined"
             multiline
             rows={2}
+            value={messageInput}
+            onChange={(e) => setMessageInput(e.target.value)}
+            onKeyDown={handleKeyDown} // Call handleKeyDown on key press
           />
         </DialogContent>
         <DialogActions>
