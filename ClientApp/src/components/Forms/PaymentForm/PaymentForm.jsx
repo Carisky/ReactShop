@@ -30,7 +30,7 @@ export default function PaymentForm({ onSubmit }) {
   } = useForm();
 
   const handleFormSubmit = (formData) => {
-    onSubmit(formData); // Pass the form data to parent component for processing
+    onSubmit(formData); 
   };
 
   return (

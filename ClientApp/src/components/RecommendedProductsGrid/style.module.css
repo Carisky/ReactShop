@@ -1,8 +1,8 @@
 .gridContainer {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-gap: 16px; /* Adjust gap size as needed */
-    padding: 16px; /* Adjust padding as needed */
+    grid-gap: 16px;
+    padding: 16px;
   }
   
   @media (max-width: 768px) {

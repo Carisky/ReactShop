@@ -18,7 +18,7 @@ namespace ReactShop.Controllers
             _productService = productService;
         }
 
-        // GET: api/Products
+        
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -26,7 +26,7 @@ namespace ReactShop.Controllers
             return Ok(products);
         }
 
-        // GET: api/Products/5
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -45,7 +45,7 @@ namespace ReactShop.Controllers
             return Ok(products);
         }
 
-        // POST: api/Products
+        
         [HttpPost]
         public async Task<IActionResult> Post(Product product)
         {
@@ -57,7 +57,7 @@ namespace ReactShop.Controllers
             return BadRequest(ModelState);
         }
 
-        // PUT: api/Products/5
+        
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Product product)
         {
@@ -88,7 +88,7 @@ namespace ReactShop.Controllers
             return BadRequest(ModelState);
         }
 
-        // DELETE: api/Products/5
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

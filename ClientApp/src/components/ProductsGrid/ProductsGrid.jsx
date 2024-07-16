@@ -1,4 +1,4 @@
-// ProductsGrid.js
+
 import React, { useState, useEffect } from 'react';
 import style from './style.module.css';
 import Product from '../UI/Product/Product';

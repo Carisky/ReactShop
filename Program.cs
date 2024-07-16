@@ -6,14 +6,14 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 ServiceLoader.ConfigureServices(builder.Services, builder.Configuration);
 
-// Configure logging
+
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
-// Configure CORS
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Ensure database connection
+
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -43,7 +43,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseHsts();
@@ -53,10 +53,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-// Enable CORS
+
 app.UseCors("AllowReactApp");
 
-// Add authentication and authorization middleware
+
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -42,7 +42,7 @@ namespace ReactShop.Services
             existingUser.Login = user.Login;
             existingUser.Role = user.Role;
 
-            // Update password if it's changed
+            
             if (!string.IsNullOrEmpty(user.Password))
             {
                 existingUser.Password = HashPassword(user.Password);

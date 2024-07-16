@@ -12,7 +12,7 @@ class ProductsService {
       return response.data;
     } catch (error) {
       console.error('Error fetching products:', error);
-      throw error; // propagate the error to handle it in components
+      throw error; 
     }
   }
 
@@ -22,7 +22,7 @@ class ProductsService {
       return response.data;
     } catch (error) {
       console.error('Error fetching product details:', error);
-      throw error; // propagate the error to handle it in components
+      throw error; 
     }
   }
 }

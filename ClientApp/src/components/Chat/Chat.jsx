@@ -18,16 +18,16 @@ export default function Chat() {
   };
 
   const handleSendMessage = async () => {
-    // Add the user message to the chat interface
+    
     const newUserMessage = {
       content: messageInput,
       sender: 'user',
     };
 
-    // Update messages state using functional update to ensure it's up-to-date
+    
     setMessages(prevMessages => [...prevMessages, newUserMessage]);
 
-    // Prepare the request body
+    
     const requestBody = {
       model: "gpt-4o",
       messages: [
@@ -36,7 +36,7 @@ export default function Chat() {
       ],
     };
 
-    // Make an API request to OpenAI
+    
     try {
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -54,25 +54,25 @@ export default function Chat() {
       const responseData = await response.json();
       const botMessage = responseData.choices[0].message.content.trim();
 
-      // Add the bot response to the chat interface
+      
       const newBotMessage = {
         content: botMessage,
         sender: 'bot',
       };
 
-      // Update messages state again using functional update to ensure it's up-to-date
+      
       setMessages(prevMessages => [...prevMessages, newBotMessage]);
 
-      // Clear the message input field
+      
       setMessageInput('');
 
     } catch (error) {
       console.error('Error fetching from OpenAI:', error);
-      // Handle error (e.g., show error message to user)
+      
     }
   };
 
-  // Handle sending messages on Ctrl + Enter
+  
   const handleKeyDown = (event) => {
     if (event.ctrlKey && event.key === 'Enter') {
       handleSendMessage();
@@ -108,7 +108,7 @@ export default function Chat() {
             rows={2}
             value={messageInput}
             onChange={(e) => setMessageInput(e.target.value)}
-            onKeyDown={handleKeyDown} // Call handleKeyDown on key press
+            onKeyDown={handleKeyDown} 
           />
         </DialogContent>
         <DialogActions>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CartService from "../../../Services/CartService";
-import axios from "axios"; // Assuming axios is used for HTTP requests
+import axios from "axios"; 
 import ProductPreview from "../ProductPreview/ProductPreview";
 import style from "./style.module.css";
 import { Button } from "@mui/material";

@@ -1,4 +1,4 @@
-// ProductDetails.js
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
@@ -24,7 +24,7 @@ export default function ProductDetails() {
         })
 
         
-        // You can add logic here to handle tags if needed
+        
       } catch (error) {
         console.error('Error fetching product details:', error);
       }

@@ -13,14 +13,14 @@ namespace ReactShop.Services
     {
         public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            // Add controllers with views
+            
             services.AddControllersWithViews();
 
-            // Add PostgreSQL DbContext
+            
             services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
-            // Add CORS policy
+            
             services.AddCors(options =>
             {
                 options.AddPolicy("ReactPolicy",
@@ -32,12 +32,12 @@ namespace ReactShop.Services
                     });
             });
 
-            // Add scoped service
+            
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
 
-            // JWT Authentication
+            
             var key = Encoding.ASCII.GetBytes("my-32-character-ultra-secure-and-ultra-long-secret");
             services.AddAuthentication(options =>
             {
@@ -57,7 +57,7 @@ namespace ReactShop.Services
                 };
             });
 
-            // Add Authorization
+            
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));

@@ -48,7 +48,7 @@ namespace ReactShop.Controllers
 
             if (imageFile != null && imageFile.Length > 0)
             {
-                // Save the image file to a location and get the URL
+                
                 var imagePath = Path.Combine("wwwroot/ProductImages", imageFile.FileName);
                 using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
