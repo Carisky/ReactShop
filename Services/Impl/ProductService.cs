@@ -23,6 +23,11 @@ namespace ReactShop.Services
             return await _context.Products.FindAsync(id);
         }
 
+        public async Task<IEnumerable<Product>> GetByIds(IEnumerable<int> ids) // Implementation of the new method
+        {
+            return await _context.Products.Where(p => ids.Contains(p.Id)).ToListAsync();
+        }
+
         public async Task<Product> Add(Product product)
         {
             _context.Products.Add(product);

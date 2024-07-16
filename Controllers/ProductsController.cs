@@ -38,6 +38,13 @@ namespace ReactShop.Controllers
             return Ok(product);
         }
 
+        [HttpPost("ids")]
+        public async Task<IActionResult> GetByIds([FromBody] IEnumerable<int> ids)
+        {
+            var products = await _productService.GetByIds(ids);
+            return Ok(products);
+        }
+
         // POST: api/Products
         [HttpPost]
         public async Task<IActionResult> Post(Product product)
