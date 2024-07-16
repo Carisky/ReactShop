@@ -20,10 +20,9 @@ export default function AdminHome() {
     name: "",
     price: 0,
     amount: 0,
-    imageUrl: "",
     tags: "",
   });
-
+  const [imageFile, setImageFile] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
 
@@ -49,17 +48,20 @@ export default function AdminHome() {
 
   const handleCreateArticle = () => {
     const token = UserService.getUser();
-
-    const tagsArray = newArticle.tags.split(",").map((tag) => tag.trim());
-    const articleData = {
-      ...newArticle,
-      tags: tagsArray,
-    };
+    const formData = new FormData();
+    formData.append("name", newArticle.name);
+    formData.append("price", newArticle.price);
+    formData.append("amount", newArticle.amount);
+    formData.append("tags", newArticle.tags.split(",").map((tag) => tag.trim()));
+    if (imageFile) {
+      formData.append("imageFile", imageFile);
+    }
 
     axios
-      .post("/admin/articles", articleData, {
+      .post("/admin/articles", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
       })
       .then((response) => {
@@ -69,9 +71,9 @@ export default function AdminHome() {
           name: "",
           price: 0,
           amount: 0,
-          imageUrl: "",
           tags: "",
         });
+        setImageFile(null);
       })
       .catch((error) => {
         console.error("Error creating article:", error);
@@ -84,6 +86,10 @@ export default function AdminHome() {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleImageChange = (event) => {
+    setImageFile(event.target.files[0]);
   };
 
   const handleDeleteClick = (productId) => {
@@ -172,13 +178,11 @@ export default function AdminHome() {
           fullWidth
           margin="normal"
         />
-        <TextField
-          name="imageUrl"
-          label="Image URL"
-          value={newArticle.imageUrl}
-          onChange={handleInputChange}
-          fullWidth
-          margin="normal"
+        <input
+          accept="image/*"
+          type="file"
+          onChange={handleImageChange}
+          style={{ margin: "20px 0" }}
         />
         <TextField
           name="tags"
@@ -206,7 +210,6 @@ export default function AdminHome() {
           />
         </div>
 
-        {/* Delete Confirmation Dialog */}
         <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
           <DialogTitle>Delete Article</DialogTitle>
           <DialogContent>
