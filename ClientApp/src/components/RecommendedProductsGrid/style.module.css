@@ -5,30 +5,14 @@
     padding: 16px; /* Adjust padding as needed */
   }
   
-  /* Add responsive design for smaller screens */
   @media (max-width: 768px) {
     .gridContainer {
-      grid-template-columns: 1fr;
-      overflow-x: auto;
-      display: flex;
-    }
-  
-    .gridContainer > * {
-      flex: 0 0 auto;
-      width: calc(100% / 3);
+      grid-template-columns: repeat(2, 1fr);
     }
   }
   
   @media (max-width: 480px) {
     .gridContainer {
       grid-template-columns: 1fr;
-      overflow-x: auto;
-      display: flex;
-    }
-  
-    .gridContainer > * {
-      flex: 0 0 auto;
-      width: 100%;
     }
   }
-  
