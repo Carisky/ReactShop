@@ -39,16 +39,29 @@ namespace ReactShop.Controllers
 
         [Authorize(Policy = "AdminOnly")]
         [HttpPost("articles")]
-        public async Task<IActionResult> CreateArticleAsync(Product article)
+        public async Task<IActionResult> CreateArticleAsync([FromForm] Product article, [FromForm] IFormFile imageFile)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                // Save the image file to a location and get the URL
+                var imagePath = Path.Combine("wwwroot/ProductImages", imageFile.FileName);
+                using (var stream = new FileStream(imagePath, FileMode.Create))
+                {
+                    await imageFile.CopyToAsync(stream);
+                }
+                article.ImageUrl = $"/{imageFile.FileName}";
+            }
+
             await _productService.Add(article);
             return CreatedAtAction(nameof(GetArticleByIdAsync), new { id = article.Id }, article);
         }
+
+
 
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("articles/{id}")]
