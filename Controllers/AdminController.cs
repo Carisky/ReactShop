@@ -48,7 +48,7 @@ namespace ReactShop.Controllers
 
             if (imageFile != null && imageFile.Length > 0)
             {
-                
+
                 var imagePath = Path.Combine("wwwroot/ProductImages", imageFile.FileName);
                 using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
@@ -61,7 +61,48 @@ namespace ReactShop.Controllers
             return CreatedAtAction(nameof(GetArticleByIdAsync), new { id = article.Id }, article);
         }
 
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost]
+        public async Task<IActionResult> Post(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                await _productService.Add(product);
+                return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+            }
+            return BadRequest(ModelState);
+        }
 
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPut]
+        public async Task<IActionResult> Put(int id, Product product)
+        {
+            if (id != product.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _productService.Update(id, product);
+                }
+                catch (Exception)
+                {
+                    if (!await ProductExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return NoContent();
+            }
+            return BadRequest(ModelState);
+        }
 
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("articles/{id}")]

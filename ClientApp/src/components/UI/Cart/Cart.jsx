@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CartService from "../../../Services/CartService";
-import axios from "axios"; 
+import axios from "axios";
 import ProductPreview from "../ProductPreview/ProductPreview";
 import style from "./style.module.css";
 import { Button } from "@mui/material";
@@ -17,6 +17,22 @@ export default function Cart() {
 
   const handleClose = () => {
     setOpenModal(false);
+  };
+
+  const updateCartItemQuantity = (productId, newQuantity) => {
+    CartService.updateItemQuantity(productId, newQuantity);
+    setCartItems((prevCartItems) =>
+      prevCartItems.map((item) =>
+        item.productId === productId ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
+
+  const handleRemoveItem = (productId) => {
+    CartService.removeItem(productId);
+    setCartItems((prevCartItems) =>
+      prevCartItems.filter((item) => item.productId !== productId)
+    );
   };
 
   useEffect(() => {
@@ -53,12 +69,19 @@ export default function Cart() {
     <>
       <div className={style.cartGrid}>
         {cartItems.map((item) => (
-          <ProductPreview key={item.productId} item={item} />
+          <ProductPreview
+            key={item.productId}
+            item={item}
+            updateCartItemQuantity={updateCartItemQuantity}
+            handleRemoveItem={handleRemoveItem}
+          />
         ))}
       </div>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
-        Open Payment Form
-      </Button>
+      <div className={style.buttonContainer}>
+        <Button variant="contained" color="primary" onClick={handleOpen}>
+          Pay
+        </Button>
+      </div>
       <PaymentModal open={openModal} handleClose={handleClose} />
     </>
   );

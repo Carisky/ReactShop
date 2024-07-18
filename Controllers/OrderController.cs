@@ -68,14 +68,20 @@ namespace ReactShop.Controllers
 
             await _orderService.CreateOrderAsync(order);
 
-            // Generate order details in HTML format
+            
             var orderDetails = new StringBuilder();
             foreach (var item in order.Items)
             {
-                orderDetails.Append($"<li>Product ID: {item.ProductId}, Quantity: {item.Quantity}</li>");
+                var product = await _productService.GetById(item.ProductId);
+                if (product == null || product.Amount < item.Quantity)
+                {
+                    return BadRequest($"Insufficient stock for product ID {item.ProductId}");
+                }
+                product.Amount -= item.Quantity; 
+                await _productService.Update(product.Id,product); 
             }
 
-            // Send an email notification
+            
             await _emailSender.SendOrderConfirmationEmailAsync(orderCreateDto.Email, order.Fullname, orderDetails.ToString());
 
             return Ok(order);

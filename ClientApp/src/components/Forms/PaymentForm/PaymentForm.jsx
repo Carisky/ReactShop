@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import axios from 'axios';
 import CartService from '../../../Services/CartService';
+import { useNavigate } from 'react-router-dom';
 
 const PaymentForm = () => {
   const paypalRef = useRef();
-
+  const navigate = useNavigate();
   useEffect(() => {
     const cartItems = CartService.getCart();
 
@@ -37,6 +38,7 @@ const PaymentForm = () => {
                 .then(response => {
                   alert('Order successfully created and transaction completed by ' + details.payer.name.given_name);
                   CartService.clearCart();
+                  
                 })
                 .catch(error => {
                   console.error('Error creating order:', error);

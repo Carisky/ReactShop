@@ -1,6 +1,19 @@
 import React from "react";
 import style from "./style.module.css";
-export default function ProductPreview({ item }) {
+
+export default function ProductPreview({ item, updateCartItemQuantity, handleRemoveItem }) {
+  const increaseQuantity = () => {
+    updateCartItemQuantity(item.productId, item.quantity + 1);
+  };
+
+  const decreaseQuantity = () => {
+    if (item.quantity > 1) {
+      updateCartItemQuantity(item.productId, item.quantity - 1);
+    } else {
+      handleRemoveItem(item.productId);
+    }
+  };
+
   return (
     <div>
       <div className={style.container} key={item.productId}>
@@ -16,6 +29,10 @@ export default function ProductPreview({ item }) {
             {item.product?.price
               ? `$${item.product.price}`
               : "Price Not Available"}
+          </div>
+          <div className={style.buttons}>
+            <button onClick={decreaseQuantity}>-</button>
+            <button onClick={increaseQuantity}>+</button>
           </div>
         </div>
       </div>

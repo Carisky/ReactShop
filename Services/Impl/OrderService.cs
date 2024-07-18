@@ -18,5 +18,6 @@ namespace ReactShop.Services
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
         }
+        
     }
 }
