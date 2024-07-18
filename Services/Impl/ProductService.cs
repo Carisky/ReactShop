@@ -42,6 +42,8 @@ namespace ReactShop.Services
             {
                 existingProduct.Name = product.Name;
                 existingProduct.Price = product.Price;
+                existingProduct.Amount = product.Amount;
+                existingProduct.Tags = product.Tags;
                 await _context.SaveChangesAsync();
             }
             return existingProduct;

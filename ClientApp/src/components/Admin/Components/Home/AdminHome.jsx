@@ -25,6 +25,13 @@ export default function AdminHome() {
   const [imageFile, setImageFile] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [editingArticleId, setEditingArticleId] = useState(null);
+  const [editingArticle, setEditingArticle] = useState({
+    name: "",
+    price: 0,
+    amount: 0,
+    tags: "",
+  });
 
   useEffect(() => {
     fetchArticles();
@@ -122,6 +129,56 @@ export default function AdminHome() {
     setDeleteDialogOpen(false);
   };
 
+  const handleEditClick = (article) => {
+    setEditingArticleId(article.id);
+    setEditingArticle({
+      name: article.name,
+      price: article.price,
+      amount: article.amount,
+      tags: article.tags.join(", "),
+    });
+  };
+
+  const handleEditArticle = () => {
+    const token = UserService.getUser();
+    const formData = new FormData();
+    formData.append("name", editingArticle.name);
+    formData.append("price", editingArticle.price);
+    formData.append("amount", editingArticle.amount);
+    formData.append("tags", editingArticle.tags.split(",").map((tag) => tag.trim()));
+
+
+    axios
+      .put(`/admin/articles/${editingArticleId}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log("Article updated successfully:", response.data);
+        fetchArticles();
+        setEditingArticleId(null);
+        setEditingArticle({
+          name: "",
+          price: 0,
+          amount: 0,
+          tags: "",
+        });
+      })
+      .catch((error) => {
+        console.error("Error updating article:", error);
+      });
+  };
+
+  const handleEditInputChange = (event) => {
+    const { name, value } = event.target;
+    setEditingArticle((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "name", headerName: "Name", width: 130 },
@@ -132,15 +189,25 @@ export default function AdminHome() {
     {
       field: "actions",
       headerName: "Actions",
-      width: 120,
+      width: 200,
       renderCell: (params) => (
-        <Button
-          variant="outlined"
-          color="error"
-          onClick={() => handleDeleteClick(params.row.id)}
-        >
-          Delete
-        </Button>
+        <div>
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ marginRight: 10 }}
+            onClick={() => handleEditClick(params.row)}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => handleDeleteClick(params.row.id)}
+          >
+            Delete
+          </Button>
+        </div>
       ),
     },
   ];
@@ -152,54 +219,105 @@ export default function AdminHome() {
           Admin Panel
         </Typography>
 
-        <TextField
-          name="name"
-          label="Name"
-          value={newArticle.name}
-          onChange={handleInputChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          name="price"
-          label="Price"
-          type="number"
-          value={newArticle.price}
-          onChange={handleInputChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          name="amount"
-          label="Amount"
-          type="number"
-          value={newArticle.amount}
-          onChange={handleInputChange}
-          fullWidth
-          margin="normal"
-        />
-        <input
-          accept="image/*"
-          type="file"
-          onChange={handleImageChange}
-          style={{ margin: "20px 0" }}
-        />
-        <TextField
-          name="tags"
-          label="Tags (comma-separated)"
-          value={newArticle.tags}
-          onChange={handleInputChange}
-          fullWidth
-          margin="normal"
-        />
+        {editingArticleId ? (
+          <>
+            <TextField
+              name="name"
+              label="Name"
+              value={editingArticle.name}
+              onChange={handleEditInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="price"
+              label="Price"
+              type="number"
+              value={editingArticle.price}
+              onChange={handleEditInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="amount"
+              label="Amount"
+              type="number"
+              value={editingArticle.amount}
+              onChange={handleEditInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="tags"
+              label="Tags (comma-separated)"
+              value={editingArticle.tags}
+              onChange={handleEditInputChange}
+              fullWidth
+              margin="normal"
+            />
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleCreateArticle}
-        >
-          Create Article
-        </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleEditArticle}
+              style={{ marginTop: 10 }}
+            >
+              Save Changes
+            </Button>
+          </>
+        ) : (
+          <>
+            <TextField
+              name="name"
+              label="Name"
+              value={newArticle.name}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="price"
+              label="Price"
+              type="number"
+              value={newArticle.price}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              name="amount"
+              label="Amount"
+              type="number"
+              value={newArticle.amount}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+            <input
+              accept="image/*"
+              type="file"
+              onChange={handleImageChange}
+              style={{ margin: "20px 0" }}
+            />
+            <TextField
+              name="tags"
+              label="Tags (comma-separated)"
+              value={newArticle.tags}
+              onChange={handleInputChange}
+              fullWidth
+              margin="normal"
+            />
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCreateArticle}
+              style={{ marginTop: 10 }}
+            >
+              Create Article
+            </Button>
+          </>
+        )}
 
         <div style={{ height: 400, width: "100%", marginTop: "20px" }}>
           <DataGrid

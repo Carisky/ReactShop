@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using ReactShop.Models;
 using ReactShop.Services.Interface;
 using System;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -68,42 +69,42 @@ namespace ReactShop.Controllers
             if (ModelState.IsValid)
             {
                 await _productService.Add(product);
-                return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+                return CreatedAtAction(nameof(_productService.GetById), new { id = product.Id }, product);
             }
             return BadRequest(ModelState);
         }
 
         [Authorize(Policy = "AdminOnly")]
-        [HttpPut]
-        public async Task<IActionResult> Put(int id, Product product)
+        [HttpPut("articles/{id}")]
+        public async Task<IActionResult> Put(int id, [FromForm] Product product, IFormFile? imageFile)
         {
-            if (id != product.Id)
+
+            if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest(ModelState);
             }
 
-            if (ModelState.IsValid)
+            if (imageFile != null && imageFile.Length > 0)
             {
-                try
+                // Handle file upload, if needed
+                var imagePath = $"wwwroot/ProductImages/{imageFile.FileName}";
+                using (var stream = new FileStream(imagePath, FileMode.Create))
                 {
-                    await _productService.Update(id, product);
+                    await imageFile.CopyToAsync(stream);
                 }
-                catch (Exception)
-                {
-                    if (!await ProductExists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return NoContent();
+                product.ImageUrl = $"/ProductImages/{imageFile.FileName}";
             }
-            return BadRequest(ModelState);
+
+            try
+            {
+                await _productService.Update(id, product); // Assuming _productService has an Update method
+                return NoContent(); // 204 No Content
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error updating article: {ex.Message}");
+            }
         }
-
         [Authorize(Policy = "AdminOnly")]
         [HttpGet("articles/{id}")]
         public async Task<IActionResult> GetArticleByIdAsync(int id)
@@ -128,6 +129,12 @@ namespace ReactShop.Controllers
 
             await _productService.Delete(article.Id);
             return NoContent();
+        }
+
+        private async Task<bool> ProductExists(int id)
+        {
+            var product = await _productService.GetById(id);
+            return product != null;
         }
     }
 }

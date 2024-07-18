@@ -45,10 +45,6 @@ namespace ReactShop.Controllers
             return Ok(products);
         }
 
-        private async Task<bool> ProductExists(int id)
-        {
-            var product = await _productService.GetById(id);
-            return product != null;
-        }
+
     }
 }
