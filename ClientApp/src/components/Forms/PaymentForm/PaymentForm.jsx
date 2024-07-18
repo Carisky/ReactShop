@@ -25,9 +25,10 @@ const PaymentForm = () => {
             return actions.order.capture().then(details => {
               const fullname = details.payer.name.given_name + ' ' + details.payer.name.surname;
               const address = details.purchase_units[0].shipping.address;
-
+              const email = details.payer.email_address;
               const orderData = {
                 fullname,
+                email,
                 address: `${address.address_line_1}, ${address.admin_area_2}, ${address.admin_area_1}, ${address.postal_code}, ${address.country_code}`,
                 items: cartItems
               };
