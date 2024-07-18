@@ -1,10 +1,12 @@
 namespace ReactShop.Models
 {
+
     public class Order
     {
         public int Id { get; set; }
-        public required string Address { get; set; }
-        public required string Fullname { get; set; }
-        public required PaymentInfo PaymentInfo { get; set; }
+        public string Address { get; set; }
+        public string Fullname { get; set; }
+        public List<OrderItem> Items { get; set; } = new List<OrderItem>();
     }
+
 }

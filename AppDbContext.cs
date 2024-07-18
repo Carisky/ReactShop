@@ -8,16 +8,19 @@ public class AppDbContext : DbContext
     {
     }
 
-    // Define your DbSets here
-    // public DbSet<YourEntity> YourEntities { get; set; }
+    
+    
     public DbSet<Product> Products { get; set; }
     public DbSet<Order> Orders { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
 
-    // Define your Custom rels here
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Order>()
-            .OwnsOne(o => o.PaymentInfo);
+        base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<OrderItem>()
+                .HasKey(oi => oi.Id);  
     }
 }
