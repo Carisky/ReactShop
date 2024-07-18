@@ -36,7 +36,7 @@ namespace ReactShop.Services
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
-
+            services.AddScoped<IOrderService, OrderService>();
             
             var key = Encoding.ASCII.GetBytes("my-32-character-ultra-secure-and-ultra-long-secret");
             services.AddAuthentication(options =>
