@@ -3,6 +3,8 @@ using ReactShop.Models;
 using ReactShop.Services.Interface;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using System.Text;
 
 namespace ReactShop.Controllers
 {
@@ -12,11 +14,13 @@ namespace ReactShop.Controllers
     {
         private readonly IProductService _productService;
         private readonly IOrderService _orderService;
+        private readonly ICustomEmailSender _emailSender;
 
-        public OrderController(IProductService productService, IOrderService orderService)
+        public OrderController(IProductService productService, IOrderService orderService, ICustomEmailSender emailSender)
         {
             _productService = productService;
             _orderService = orderService;
+            _emailSender = emailSender;
         }
 
         [HttpPost("CheckStock")]
@@ -45,6 +49,7 @@ namespace ReactShop.Controllers
             {
                 Fullname = orderCreateDto.Fullname,
                 Address = orderCreateDto.Address,
+                Email = orderCreateDto.Email,
                 Items = orderCreateDto.Items.Select(i => new OrderItem
                 {
                     ProductId = i.ProductId,
@@ -62,6 +67,17 @@ namespace ReactShop.Controllers
             }
 
             await _orderService.CreateOrderAsync(order);
+
+            // Generate order details in HTML format
+            var orderDetails = new StringBuilder();
+            foreach (var item in order.Items)
+            {
+                orderDetails.Append($"<li>Product ID: {item.ProductId}, Quantity: {item.Quantity}</li>");
+            }
+
+            // Send an email notification
+            await _emailSender.SendOrderConfirmationEmailAsync(orderCreateDto.Email, order.Fullname, orderDetails.ToString());
+
             return Ok(order);
         }
     }

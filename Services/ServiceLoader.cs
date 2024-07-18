@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using ReactShop.Services;
 using ReactShop.Services.Interface;
 using System.Text;
 
@@ -13,14 +10,14 @@ namespace ReactShop.Services
     {
         public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            
+
             services.AddControllersWithViews();
 
-            
+
             services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
-            
+
             services.AddCors(options =>
             {
                 options.AddPolicy("ReactPolicy",
@@ -32,12 +29,18 @@ namespace ReactShop.Services
                     });
             });
 
-            
+
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IOrderService, OrderService>();
-            
+            services.AddSingleton<ICustomEmailSender, EmailService>(sp =>
+            new EmailService(
+                configuration["Email:SmtpServer"],
+                int.Parse(configuration["Email:SmtpPort"]),
+                configuration["Email:SmtpUser"],
+                configuration["Email:SmtpPass"]
+            ));
             var key = Encoding.ASCII.GetBytes("my-32-character-ultra-secure-and-ultra-long-secret");
             services.AddAuthentication(options =>
             {
@@ -57,7 +60,7 @@ namespace ReactShop.Services
                 };
             });
 
-            
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
