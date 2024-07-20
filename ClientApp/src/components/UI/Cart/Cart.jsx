@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
-import CartService from "../../../Services/CartService";
-import axios from "axios";
-import ProductPreview from "../ProductPreview/ProductPreview";
-import style from "./style.module.css";
-import { Button } from "@mui/material";
-import PaymentModal from "../../Forms/PaymentModal/PaymentModal";
+// src/components/Cart/Cart.js
+
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import ProductPreview from '../ProductPreview/ProductPreview';
+import style from './style.module.css';
+import { Button } from '@mui/material';
+import PaymentModal from '../../Forms/PaymentModal/PaymentModal';
+import { updateCartWithDetails } from '../../../redux/cartSlice';
 
 export default function Cart() {
-  const [cartItems, setCartItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [openModal, setOpenModal] = useState(false);
+  const { items: cartItems, status, error } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+  const [openModal, setOpenModal] = React.useState(false);
 
   const handleOpen = () => {
     setOpenModal(true);
@@ -19,50 +21,18 @@ export default function Cart() {
     setOpenModal(false);
   };
 
-  const updateCartItemQuantity = (productId, newQuantity) => {
-    CartService.updateItemQuantity(productId, newQuantity);
-    setCartItems((prevCartItems) =>
-      prevCartItems.map((item) =>
-        item.productId === productId ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
-  const handleRemoveItem = (productId) => {
-    CartService.removeItem(productId);
-    setCartItems((prevCartItems) =>
-      prevCartItems.filter((item) => item.productId !== productId)
-    );
-  };
-
   useEffect(() => {
-    async function fetchCartItems() {
-      const cart = CartService.getCart();
-      if (cart.length > 0) {
-        const productIds = cart.map((item) => item.productId);
-        try {
-          const response = await axios.post("/products/ids", productIds);
-          const products = response.data;
-          const cartWithDetails = cart.map((cartItem) => {
-            const product = products.find((p) => p.id === cartItem.productId);
-            return {
-              ...cartItem,
-              product,
-            };
-          });
-          setCartItems(cartWithDetails);
-        } catch (error) {
-          console.error("Failed to fetch product details", error);
-        }
-      }
-      setLoading(false);
+    if (status === 'idle') {
+      dispatch(updateCartWithDetails());
     }
+  }, [status, dispatch]);
 
-    fetchCartItems();
-  }, []);
-
-  if (loading) {
+  if (status === 'loading') {
     return <div>Loading...</div>;
+  }
+
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
   }
 
   return (
@@ -72,8 +42,6 @@ export default function Cart() {
           <ProductPreview
             key={item.productId}
             item={item}
-            updateCartItemQuantity={updateCartItemQuantity}
-            handleRemoveItem={handleRemoveItem}
           />
         ))}
       </div>
