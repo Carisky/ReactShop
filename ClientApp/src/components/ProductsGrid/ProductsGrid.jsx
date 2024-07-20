@@ -1,30 +1,30 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import style from './style.module.css';
 import Product from '../UI/Product/Product';
-import ProductsService from '../../Services/ProductsService';
+import { fetchProducts } from '../../redux/productsSlice';
 
 const ProductsGrid = () => {
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.products.products);
+  const productStatus = useSelector((state) => state.products.status);
+  const error = useSelector((state) => state.products.error);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const productsData = await ProductsService.fetchProducts();
-        setProducts(productsData);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+    if (productStatus === 'idle') {
+      dispatch(fetchProducts());
+    }
+  }, [productStatus, dispatch]);
 
   return (
     <div className={style.gridContainer}>
-      {products.map((product) => (
-        <Product key={product.id} product={product} />
-      ))}
+      {error ? (
+        <p>Error fetching products: {error}</p>
+      ) : (
+        products.map((product) => (
+          <Product key={product.id} product={product} />
+        ))
+      )}
     </div>
   );
 };
