@@ -1,23 +1,22 @@
 import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TextField, Button } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../redux/userSlice";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import UserService from "../../../Services/UserService";
-import {useNavigate} from "react-router-dom"
+
 export default function AuthForm() {
-  const navigate = useNavigate()
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { control, handleSubmit, formState: { errors } } = useForm();
 
   const handleFormSubmit = async (formData) => {
     try {
       const response = await axios.post("/auth/login", formData);
       const { token } = response.data;
-      UserService.setUser(token);
-      navigate("/admin")
+      dispatch(setUser(token));
+      navigate("/admin");
     } catch (error) {
       console.error("Login error:", error);
     }
