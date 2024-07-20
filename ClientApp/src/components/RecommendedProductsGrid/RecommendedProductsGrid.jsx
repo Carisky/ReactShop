@@ -1,38 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import style from './style.module.css'; // CSS module for styling
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import style from './style.module.css'; 
 import Product from '../UI/Product/Product';
-import RecomendedProducts from '../../Services/RecomendedProducts';
-import axios from 'axios';
+import { fetchRecommendedProducts, resetTags } from '../../redux/recommendedProductsSlice';
 
 const RecommendedProductsGrid = () => {
+  const dispatch = useDispatch();
+  const recommendedProducts = useSelector((state) => state.recommendedProducts.recommendedProducts);
+  const status = useSelector((state) => state.recommendedProducts.status);
+  const error = useSelector((state) => state.recommendedProducts.error);
+  const tags = useSelector((state) => state.recommendedProducts.tags);
 
-    const [recomendedProducts, setRecomendedProducts] = useState([]);
+  useEffect(() => {
+    if (status === 'idle') {
+      dispatch(fetchRecommendedProducts());
+    }
+  }, [status, dispatch]);
 
-    useEffect(() => {
-        fetchRecomendedProducts();
-      }, []);
+  useEffect(() => {
+    if (Object.keys(tags).length > 0) {
+      dispatch(fetchRecommendedProducts());
+    }
+  }, [tags, dispatch]);
 
-
-    const fetchRecomendedProducts = async () => {
-        try {
-          const tags = RecomendedProducts.getMostVisited(3).map((tag) => tag.tag);
-          const response = await axios.post(
-            "/recommendedproducts",
-            { tags }
-          );
-          setRecomendedProducts(response.data);
-        } catch (error) {
-          console.error("Error fetching products:", error);
-        }
-      };
+  
+  useEffect(() => {
+    console.log('Recommended Products:', recommendedProducts);
+    console.log('Tags:', tags);
+  }, [recommendedProducts, tags]);
 
   return (
     <div>
       <h2>Recommended Products</h2>
       <div className={style.gridContainer}>
-        {recomendedProducts.map((product) => (
-          <Product key={product.id} product={product} />
-        ))}
+        {status === 'loading' && <p>Loading...</p>}
+        {recommendedProducts && recommendedProducts.length > 0 ? (
+          recommendedProducts.map((product) => (
+            <Product key={product.id} product={product} />
+          ))
+        ) : (
+          <p>No recommended products available.</p>
+        )}
       </div>
     </div>
   );
