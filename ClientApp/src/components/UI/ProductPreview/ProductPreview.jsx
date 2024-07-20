@@ -1,39 +1,41 @@
-import React from "react";
-import style from "./style.module.css";
+// src/components/ProductPreview/ProductPreview.js
 
-export default function ProductPreview({ item, updateCartItemQuantity, handleRemoveItem }) {
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import style from './style.module.css';
+import { updateItemQuantity, removeItem } from '../../../redux/cartSlice';
+
+export default function ProductPreview({ item }) {
+  const dispatch = useDispatch();
+
   const increaseQuantity = () => {
-    updateCartItemQuantity(item.productId, item.quantity + 1);
+    dispatch(updateItemQuantity({ productId: item.productId, quantity: item.quantity + 1 }));
   };
 
   const decreaseQuantity = () => {
     if (item.quantity > 1) {
-      updateCartItemQuantity(item.productId, item.quantity - 1);
+      dispatch(updateItemQuantity({ productId: item.productId, quantity: item.quantity - 1 }));
     } else {
-      handleRemoveItem(item.productId);
+      dispatch(removeItem({ productId: item.productId }));
     }
   };
 
   return (
-    <div>
-      <div className={style.container} key={item.productId}>
-        <img
-          className={style.image}
-          src={`ProductImages/${item.product.imageUrl}`}
-        />
-        <div className={style.description}>
-          <div>name : {item.product?.name || "Product Name Not Found"}</div>
-          <div>quantity : {item.quantity}</div>
-          <div>
-            price :{" "}
-            {item.product?.price
-              ? `$${item.product.price}`
-              : "Price Not Available"}
-          </div>
-          <div className={style.buttons}>
-            <button onClick={decreaseQuantity}>-</button>
-            <button onClick={increaseQuantity}>+</button>
-          </div>
+    <div className={style.container} key={item.productId}>
+      <img
+        className={style.image}
+        src={`ProductImages/${item.product?.imageUrl || 'default-image.jpg'}`} // Handle missing imageUrl
+        alt={item.product?.name || 'Product Image'}
+      />
+      <div className={style.description}>
+        <div>Name: {item.product?.name || 'Product Name Not Found'}</div>
+        <div>Quantity: {item.quantity}</div>
+        <div>
+          Price: {item.product?.price ? `$${item.product.price}` : 'Price Not Available'}
+        </div>
+        <div className={style.buttons}>
+          <button onClick={decreaseQuantity}>-</button>
+          <button onClick={increaseQuantity}>+</button>
         </div>
       </div>
     </div>
