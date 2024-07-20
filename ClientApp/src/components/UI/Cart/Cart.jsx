@@ -1,5 +1,3 @@
-// src/components/Cart/Cart.js
-
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import ProductPreview from '../ProductPreview/ProductPreview';

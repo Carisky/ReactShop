@@ -1,14 +1,14 @@
-// src/features/payment/paymentSlice.js
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Thunks to handle the payment logic
+
 export const checkStock = createAsyncThunk(
   'payment/checkStock',
   async (cartItems, { rejectWithValue }) => {
     try {
       const response = await axios.post('/Order/CheckStock', cartItems);
-      return response.data; // Expected to include totalPrice
+      return response.data; 
     } catch (error) {
       return rejectWithValue('Failed to check stock');
     }
@@ -48,7 +48,7 @@ const paymentSlice = createSlice({
       })
       .addCase(checkStock.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.totalPrice = action.payload.totalPrice; // Ensure this matches your response structure
+        state.totalPrice = action.payload.totalPrice; 
       })
       .addCase(checkStock.rejected, (state, action) => {
         state.status = 'failed';

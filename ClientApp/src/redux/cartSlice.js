@@ -1,32 +1,32 @@
-// src/features/cart/cartSlice.js
+
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Thunk to fetch product details
+
 export const fetchProductDetails = createAsyncThunk(
   'cart/fetchProductDetails',
   async (productIds, { rejectWithValue }) => {
     try {
       const response = await axios.post('/products/ids', productIds);
-      return response.data; // List of products
+      return response.data; 
     } catch (error) {
       return rejectWithValue('Failed to fetch product details');
     }
   }
 );
 
-// Thunk to update cart with fetched product details
+
 export const updateCartWithDetails = createAsyncThunk(
   'cart/updateCartWithDetails',
   async (_, { getState, dispatch }) => {
     const cartItems = getState().cart.items;
     const productIds = cartItems.map(item => item.productId);
 
-    // Fetch product details based on the product IDs
+    
     const products = await dispatch(fetchProductDetails(productIds)).unwrap();
     
-    // Return a map of product ID to product details for easy lookup
+    
     const productMap = products.reduce((map, product) => {
       map[product.id] = product;
       return map;

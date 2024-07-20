@@ -6,7 +6,7 @@ const initialState = {
   isExpired: false
 };
 
-// Helper functions
+
 const parseJwt = (token) => {
   const base64Url = token.split(".")[1];
   const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
@@ -30,7 +30,7 @@ const isAdmin = (token) => {
   return decodedToken.role === "Admin";
 };
 
-// Async Thunks
+
 export const validateAdmin = createAsyncThunk('user/validateAdmin', async (token) => {
   let options = {
     headers: {

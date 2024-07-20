@@ -1,5 +1,3 @@
-// src/components/ProductPreview/ProductPreview.js
-
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import style from './style.module.css';
@@ -24,7 +22,7 @@ export default function ProductPreview({ item }) {
     <div className={style.container} key={item.productId}>
       <img
         className={style.image}
-        src={`ProductImages/${item.product?.imageUrl || 'default-image.jpg'}`} // Handle missing imageUrl
+        src={`ProductImages/${item.product?.imageUrl || 'default-image.jpg'}`} 
         alt={item.product?.name || 'Product Image'}
       />
       <div className={style.description}>
