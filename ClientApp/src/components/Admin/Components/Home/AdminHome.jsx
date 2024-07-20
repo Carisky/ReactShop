@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import UserService from "../../../../Services/UserService";
 import { DataGrid } from "@mui/x-data-grid";
 import {
   Container,
@@ -13,6 +13,7 @@ import {
   DialogActions,
 } from "@mui/material";
 import Layout from "../Layout/Layout";
+
 
 export default function AdminHome() {
   const [products, setProducts] = useState([]);
@@ -33,12 +34,14 @@ export default function AdminHome() {
     tags: "",
   });
 
+  const token = useSelector(state => state.user.token);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     fetchArticles();
-  }, []);
+  }, [token]);
 
   const fetchArticles = () => {
-    const token = UserService.getUser();
     axios
       .get("/admin/articles", {
         headers: {
@@ -54,7 +57,6 @@ export default function AdminHome() {
   };
 
   const handleCreateArticle = () => {
-    const token = UserService.getUser();
     const formData = new FormData();
     formData.append("name", newArticle.name);
     formData.append("price", newArticle.price);
@@ -105,8 +107,6 @@ export default function AdminHome() {
   };
 
   const handleDeleteConfirm = () => {
-    const token = UserService.getUser();
-
     axios
       .delete(`/admin/articles/${selectedProductId}`, {
         headers: {
@@ -140,13 +140,11 @@ export default function AdminHome() {
   };
 
   const handleEditArticle = () => {
-    const token = UserService.getUser();
     const formData = new FormData();
     formData.append("name", editingArticle.name);
     formData.append("price", editingArticle.price);
     formData.append("amount", editingArticle.amount);
     formData.append("tags", editingArticle.tags.split(",").map((tag) => tag.trim()));
-
 
     axios
       .put(`/admin/articles/${editingArticleId}`, formData, {
