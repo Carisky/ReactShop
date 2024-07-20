@@ -1,21 +1,15 @@
 import React, { useEffect } from "react";
-import UserService from "../../../../Services/UserService";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 export default function Layout({ children }) {
-
-    const navigate = useNavigate()
-
-    const validate = async () => {
-        const isValid = await UserService.validateAdmin();
-        console.log(isValid)
-        if (!isValid) {
-            console.log(UserService.getUser())
-            navigate("/admin/auth/")
-        }
-      };
+  const navigate = useNavigate();
+  const isAdmin = useSelector(state => state.user.isAdmin);
 
   useEffect(() => {
-    validate()
+      if (!isAdmin) {
+        navigate("/admin/auth/");
+      }
   }, []);
 
   return <div>{children}</div>;
