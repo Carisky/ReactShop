@@ -79,6 +79,7 @@ namespace ReactShop.Controllers
                 }
                 product.Amount -= item.Quantity; 
                 await _productService.Update(product.Id,product); 
+                orderDetails.AppendLine($"{product.Name} - Quantity: {item.Quantity}, Price: {product.Price * item.Quantity:C}");
             }
 
             
