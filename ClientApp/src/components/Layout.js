@@ -3,7 +3,7 @@ import { Container } from 'reactstrap';
 import { NavMenu } from './NavMenu';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AdminNavMenu } from './Admin/Components/AdminNavMenu/AdminNavMenu';
-import UserService from '../Services/UserService';
+import { useSelector } from 'react-redux';
 
 export default function Layout({ children }) {
 
@@ -13,7 +13,7 @@ export default function Layout({ children }) {
   const currentPath = location.pathname;
 
   const isAdminPath = currentPath.includes("admin");
-  const isAdmin = UserService.isAdmin();
+  const isAdmin = useSelector(state => state.user.isAdmin);
 
   useEffect(() => {
     if (isAdminPath && !isAdmin){
