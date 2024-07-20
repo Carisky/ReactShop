@@ -1,47 +1,50 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
 import { Button } from 'reactstrap';
 import style from './style.module.css';
-import ProductsService from '../../../Services/ProductsService';
-import RecomendedProducts from '../../../Services/RecomendedProducts';
-import CartService from '../../../Services/CartService';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProductDetails } from '../../../redux/productsSlice';
+import { incrementTag } from '../../../redux/recommendedProductsSlice';
+import { addItem } from '../../../redux/cartSlice';
 import { Container } from '@mui/material';
 
 export default function ProductDetails() {
-  const [product, setProduct] = useState(null);
+  const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
+  const product = useSelector((state) => state.products.productDetails[id]);
+  const status = useSelector((state) => state.products.status);
+  const error = useSelector((state) => state.products.error);
 
   useEffect(() => {
-    const fetchProductDetails = async (productId) => {
-      try {
-        const productData = await ProductsService.fetchProductDetails(productId);
-        setProduct(productData);
-        productData.tags.map((tag)=>{
-          RecomendedProducts.increment(tag)
-        })
+    dispatch(fetchProductDetails(id));
+  }, [id, dispatch]);
 
-        
-        
-      } catch (error) {
-        console.error('Error fetching product details:', error);
-      }
-    };
+  useEffect(() => {
+    if (product && product.tags) {
+      product.tags.forEach((tag) => {
+        dispatch(incrementTag(tag));
+      });
+    }
+  }, [product, dispatch]);
 
-    fetchProductDetails(id);
-  }, [id]);
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (status === 'failed') {
+    return <div>Error: {error}</div>;
+  }
 
   if (!product) {
-    return <div>Loading...</div>;
+    return <div>No product found.</div>;
   }
 
   const dividerSX = {
     height: '3px',
     backgroundColor: '#000',
   };
-
 
   return (
     <div className={style.productDetailsContainer}>
@@ -52,20 +55,18 @@ export default function ProductDetails() {
       <Divider sx={dividerSX} />
       <p>Amount: {product.amount}</p>
       <Container sx={{
-        display:"flex",
-        justifyContent:"space-around"
+        display: "flex",
+        justifyContent: "space-around"
       }}>
-      <Button variant="contained" color="primary" onClick={()=>{
-        CartService.addItem(product.id, 1);
-      }}>
-        Add To Cart
-      </Button>
-      <Button variant="contained" color="secondary" onClick={() => navigate('/')}>
-        Back to Products
-      </Button>
+        <Button variant="contained" color="primary" onClick={() => {
+          dispatch(addItem({ productId: product.id, quantity: 1, product: product }));
+        }}>
+          Add To Cart
+        </Button>
+        <Button variant="contained" color="secondary" onClick={() => navigate('/')}>
+          Back to Products
+        </Button>
       </Container>
-      
-
     </div>
   );
 }
