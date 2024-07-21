@@ -322,7 +322,6 @@ export default function AdminHome() {
             rows={products}
             columns={columns}
             pageSize={5}
-            checkboxSelection
           />
         </div>
 

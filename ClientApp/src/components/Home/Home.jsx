@@ -9,7 +9,6 @@ export default function Home() {
       <h2>Products</h2>
       <ProductsGrid/>
       <RecommendedProductsGrid/>
-      
     </div>
   );
 }

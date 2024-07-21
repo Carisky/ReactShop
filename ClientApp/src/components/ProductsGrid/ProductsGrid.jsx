@@ -6,7 +6,7 @@ import { fetchProducts } from '../../redux/productsSlice';
 
 const ProductsGrid = () => {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.products.products);
+  const products = useSelector((state) => state.products.filteredProducts);
   const productStatus = useSelector((state) => state.products.status);
   const error = useSelector((state) => state.products.error);
 
