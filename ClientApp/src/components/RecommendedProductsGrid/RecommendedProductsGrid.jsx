@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import style from './style.module.css'; 
 import Product from '../UI/Product/Product';
-import { fetchRecommendedProducts, resetTags } from '../../redux/recommendedProductsSlice';
+import { fetchRecommendedProducts } from '../../redux/recommendedProductsSlice';
 
 const RecommendedProductsGrid = () => {
   const dispatch = useDispatch();
   const recommendedProducts = useSelector((state) => state.recommendedProducts.recommendedProducts);
   const status = useSelector((state) => state.recommendedProducts.status);
-  const error = useSelector((state) => state.recommendedProducts.error);
   const tags = useSelector((state) => state.recommendedProducts.tags);
 
   useEffect(() => {
@@ -24,10 +23,6 @@ const RecommendedProductsGrid = () => {
   }, [tags, dispatch]);
 
   
-  useEffect(() => {
-    console.log('Recommended Products:', recommendedProducts);
-    console.log('Tags:', tags);
-  }, [recommendedProducts, tags]);
 
   return (
     <div>

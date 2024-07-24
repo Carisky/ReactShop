@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState ,useCallback} from "react";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { DataGrid } from "@mui/x-data-grid";
 import {
@@ -35,13 +35,8 @@ export default function AdminHome() {
   });
 
   const token = useSelector(state => state.user.token);
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    fetchArticles();
-  }, [token]);
-
-  const fetchArticles = () => {
+  const fetchArticles = useCallback(() => {
     axios
       .get("/admin/articles", {
         headers: {
@@ -54,7 +49,13 @@ export default function AdminHome() {
       .catch((error) => {
         console.error("Error fetching products:", error);
       });
-  };
+  }, [token]);
+
+  useEffect(() => {
+    fetchArticles();
+  }, [token,fetchArticles]);
+
+
 
   const handleCreateArticle = () => {
     const formData = new FormData();

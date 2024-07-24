@@ -10,7 +10,7 @@ export default function Layout({ children }) {
       if (!isAdmin) {
         navigate("/admin/auth/");
       }
-  }, []);
+  }, [navigate,isAdmin]);
 
   return <div>{children}</div>;
 }
