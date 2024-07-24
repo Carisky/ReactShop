@@ -1,7 +1,6 @@
 namespace ReactShop.Services
 {
     using System.Threading.Tasks;
-    using ReactShop.Models;
 
     public interface IAuthService
     {

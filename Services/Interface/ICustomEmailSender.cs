@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Identity.UI.Services;
-using System.Threading.Tasks;
 
 namespace ReactShop.Services.Interface
 {

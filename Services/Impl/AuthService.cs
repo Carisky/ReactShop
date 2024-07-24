@@ -1,7 +1,6 @@
 namespace ReactShop.Services
 {
     using System.Threading.Tasks;
-    using ReactShop.Models;
     using Microsoft.EntityFrameworkCore;
     using System.Security.Cryptography;
     using System.Text;

@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using MimeKit;
 using MailKit.Net.Smtp;
 using ReactShop.Services.Interface;

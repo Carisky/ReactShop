@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReactShop.Models;
 using ReactShop.Services.Interface;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using System.Text;
 
 namespace ReactShop.Controllers

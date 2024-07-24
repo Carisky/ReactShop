@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using ReactShop.Models;
 using ReactShop.Services.Interface;
 
