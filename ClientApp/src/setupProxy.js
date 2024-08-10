@@ -12,6 +12,8 @@ module.exports = function (app) {
       "products/ids",
       "/Order/CheckStock",
       "/Order/CreateOrder",
+      "/Review",
+      "/Review/*",
     ],
     createProxyMiddleware({
       target: "https://localhost:7200",

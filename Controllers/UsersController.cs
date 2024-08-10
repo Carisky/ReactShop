@@ -3,6 +3,7 @@ namespace ReactShop.Controllers
     using Microsoft.AspNetCore.Mvc;
     using ReactShop.Models;
     using ReactShop.Services;
+    using ReactShop.Services.Interface;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 

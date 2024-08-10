@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using ReactShop.Services.Impl;
 using ReactShop.Services.Interface;
 using System.Text;
 
@@ -64,6 +65,7 @@ namespace ReactShop.Services
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("AuthorizedUserOnly", policy => policy.RequireRole("User"));
             });
         }
     }

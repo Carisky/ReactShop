@@ -2,7 +2,7 @@ using MimeKit;
 using MailKit.Net.Smtp;
 using ReactShop.Services.Interface;
 
-namespace ReactShop.Services
+namespace ReactShop.Services.Impl
 {
     public class EmailService : ICustomEmailSender
     {

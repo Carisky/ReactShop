@@ -8,6 +8,9 @@ import { fetchProductDetails } from '../../../redux/productsSlice';
 import { incrementTag } from '../../../redux/recommendedProductsSlice';
 import { addItem } from '../../../redux/cartSlice';
 import { Container } from '@mui/material';
+import Box from '@mui/material/Box';
+import Rating from '@mui/material/Rating';
+import Typography from '@mui/material/Typography';
 
 export default function ProductDetails() {
   const dispatch = useDispatch();
@@ -16,6 +19,8 @@ export default function ProductDetails() {
   const product = useSelector((state) => state.products.productDetails[id]);
   const status = useSelector((state) => state.products.status);
   const error = useSelector((state) => state.products.error);
+
+  const [ratingValue, setRatingValue] = React.useState(2);
 
   useEffect(() => {
     dispatch(fetchProductDetails(id));
@@ -54,9 +59,27 @@ export default function ProductDetails() {
       <p>Price: ${product.price}</p>
       <Divider sx={dividerSX} />
       <p>Amount: {product.amount}</p>
+      
+      {/* Add the rating component here */}
+      <Box
+        sx={{
+          '& > legend': { mt: 2 },
+        }}
+      >
+        <Typography component="legend">Rate this product</Typography>
+        <Rating
+          name="simple-controlled"
+          value={ratingValue}
+          onChange={(event, newValue) => {
+            setRatingValue(newValue);
+          }}
+        />
+      </Box>
+
       <Container sx={{
         display: "flex",
-        justifyContent: "space-around"
+        justifyContent: "space-around",
+        marginTop: "20px"
       }}>
         <Button variant="contained" color="primary" onClick={() => {
           dispatch(addItem({ productId: product.id, quantity: 1, product: product }));

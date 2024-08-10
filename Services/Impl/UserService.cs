@@ -1,4 +1,4 @@
-namespace ReactShop.Services
+namespace ReactShop.Services.Impl
 {
     using ReactShop.Models;
     using System.Collections.Generic;
@@ -6,6 +6,7 @@ namespace ReactShop.Services
     using Microsoft.EntityFrameworkCore;
     using System.Security.Cryptography;
     using System.Text;
+    using ReactShop.Services.Interface;
 
     public class UserService : IUserService
     {

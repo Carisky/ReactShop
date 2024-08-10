@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ReactShop.Models;
 using ReactShop.Services.Interface;
 
-namespace ReactShop.Services
+namespace ReactShop.Services.Impl
 {
     public class ProductService : IProductService
     {

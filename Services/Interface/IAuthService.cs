@@ -1,4 +1,4 @@
-namespace ReactShop.Services
+namespace ReactShop.Services.Interface
 {
     using System.Threading.Tasks;
 

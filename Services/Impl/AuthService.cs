@@ -1,9 +1,10 @@
-namespace ReactShop.Services
+namespace ReactShop.Services.Impl
 {
     using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
     using System.Security.Cryptography;
     using System.Text;
+    using ReactShop.Services.Interface;
 
     public class AuthService : IAuthService
     {

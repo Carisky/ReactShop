@@ -1,7 +1,7 @@
 using ReactShop.Models;
 using ReactShop.Services.Interface;
 
-namespace ReactShop.Services
+namespace ReactShop.Services.Impl
 {
     public class OrderService : IOrderService
     {
