@@ -6,5 +6,6 @@ namespace ReactShop.Services.Interface
     {
         Task<bool> ValidateUser(string username, string password);
         Task<string> GetUserRole(string username);
+        Task<int> GetUserId(string username);
     }
 }

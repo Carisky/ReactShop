@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ReactShop.Models;
 using ReactShop.Services.Interface;
 
 namespace ReactShop.Controllers
@@ -39,6 +41,19 @@ namespace ReactShop.Controllers
         {
             var reviews = await _reviewservice.GetListByProductId(id);
             return Ok(reviews);
+        }
+
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] Review review)
+        {
+            if (ModelState.IsValid)
+            {
+                await _reviewservice.Add(review);
+                return Ok(review);
+            }
+            return BadRequest(ModelState);
         }
     }
 }

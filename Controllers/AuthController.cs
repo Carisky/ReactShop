@@ -25,6 +25,7 @@ namespace ReactShop.Controllers
             if (await _authService.ValidateUser(userLogin.Username, userLogin.Password))
             {
                 string role = await _authService.GetUserRole(userLogin.Username);
+                int userId = await _authService.GetUserId(userLogin.Username);
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes("my-32-character-ultra-secure-and-ultra-long-secret");
@@ -32,6 +33,7 @@ namespace ReactShop.Controllers
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
+                        new Claim("UserId", userId.ToString()),
                         new Claim(ClaimTypes.Name, userLogin.Username),
                         new Claim(ClaimTypes.Role, role)
                     }),

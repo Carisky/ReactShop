@@ -38,5 +38,11 @@ namespace ReactShop.Services.Impl
                 return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
             }
         }
+
+        public async Task<int> GetUserId(string username)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Login == username);
+            return user.Id;
+        }
     }
 }

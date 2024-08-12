@@ -1,67 +1,69 @@
+using Microsoft.EntityFrameworkCore;
 using ReactShop.Models;
 using ReactShop.Services.Interface;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ReactShop.Services
 {
     public class ReviewService : IReviewService
     {
-        // In-memory storage for reviews
-        private readonly List<Review> _reviews = new List<Review>();
+        private readonly AppDbContext _context;
+
+        public ReviewService(AppDbContext context)
+        {
+            _context = context;
+        }
 
         public async Task<IEnumerable<Review>> GetAll()
         {
-            // Return all reviews
-            return await Task.FromResult(_reviews);
+            // Retrieve all reviews from the database
+            return await _context.Reviews.ToListAsync();
         }
 
         public async Task<Review> GetById(int id)
         {
-            // Find review by ID
-            var review = _reviews.FirstOrDefault(r => r.Id == id);
-            return await Task.FromResult(review);
+            // Find review by ID in the database
+            return await _context.Reviews.FindAsync(id);
         }
 
         public async Task<IEnumerable<Review>> GetListByProductId(int productId)
         {
-            // Find reviews by Product ID
-            var reviews = _reviews.Where(r => r.ProductId == productId);
-            return await Task.FromResult(reviews);
+            // Find reviews by Product ID in the database
+            return await _context.Reviews.Where(r => r.ProductId == productId).ToListAsync();
         }
 
         public async Task<Review> Add(Review review)
         {
-            // Add a new review
-            review.Id = _reviews.Any() ? _reviews.Max(r => r.Id) + 1 : 1; // Set ID for new review
-            _reviews.Add(review);
-            return await Task.FromResult(review);
+            // Add a new review to the database
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+            return review;
         }
 
         public async Task<Review> Update(int id, Review updatedReview)
         {
-            // Update an existing review
-            var review = _reviews.FirstOrDefault(r => r.Id == id);
+            var review = await _context.Reviews.FindAsync(id);
             if (review != null)
             {
+                // Update the review with the new values
                 review.UserId = updatedReview.UserId;
                 review.ProductId = updatedReview.ProductId;
                 review.ReviewPlot = updatedReview.ReviewPlot;
                 review.Rating = updatedReview.Rating;
+                
+                _context.Reviews.Update(review);
+                await _context.SaveChangesAsync();
             }
-            return await Task.FromResult(review);
+            return review;
         }
 
         public async Task Delete(int id)
         {
-            // Remove a review by ID
-            var review = _reviews.FirstOrDefault(r => r.Id == id);
+            var review = await _context.Reviews.FindAsync(id);
             if (review != null)
             {
-                _reviews.Remove(review);
+                _context.Reviews.Remove(review);
+                await _context.SaveChangesAsync();
             }
-            await Task.CompletedTask;
         }
     }
 }

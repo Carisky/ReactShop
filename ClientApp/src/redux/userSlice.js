@@ -3,7 +3,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 const initialState = {
   token: null,
   isAdmin: false,
-  isExpired: false
+  isExpired: false,
+  userId: null
 };
 
 
@@ -19,11 +20,19 @@ const parseJwt = (token) => {
   return JSON.parse(jsonPayload);
 };
 
-const validateToken = (token) => {
-  const decodedToken = parseJwt(token);
-  const currentTime = Math.floor(Date.now() / 1000);
-  return decodedToken.exp > currentTime;
-};
+export const validateToken = createAsyncThunk(
+  'user/validateToken',
+  async (token, thunkAPI) => {
+    try {
+      if(token !== null){
+        return true
+      }
+
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
 
 const isAdmin = (token) => {
   const decodedToken = parseJwt(token);
@@ -49,13 +58,16 @@ const userSlice = createSlice({
     setUser(state, action) {
       const token = action.payload;
       state.token = token;
+      const decodedToken = parseJwt(token);
       state.isAdmin = isAdmin(token);
       state.isExpired = !validateToken(token);
+      state.userId = decodedToken.UserId;
     },
     clearUser(state) {
       state.token = null;
       state.isAdmin = false;
       state.isExpired = false;
+      state.userId = null;
     }
   },
   extraReducers: (builder) => {
