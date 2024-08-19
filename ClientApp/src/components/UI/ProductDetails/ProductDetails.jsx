@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 import Divider from "@mui/material/Divider";
 import { Button } from "reactstrap";
 import style from "./style.module.css";
@@ -23,6 +24,8 @@ export default function ProductDetails() {
   const [ratingValue, setRatingValue] = useState(2);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [reviewsError, setReviewsError] = useState("");
 
   useEffect(() => {
     dispatch(fetchProductDetails(id));
@@ -35,6 +38,26 @@ export default function ProductDetails() {
       });
     }
   }, [product, dispatch]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await axios.get(`/Review/product/${id}`);
+        const reviewsData = response.data;
+        setReviews(reviewsData);
+
+        if (reviewsData.length > 0) {
+          const totalRating = reviewsData.reduce((acc, review) => acc + review.rating, 0);
+          const averageRating = totalRating / reviewsData.length;
+          setRatingValue(averageRating);  
+        }
+      } catch (error) {
+        setReviewsError(error.message);
+      }
+    };
+
+    fetchReviews();
+  }, [id]);
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -107,6 +130,21 @@ export default function ProductDetails() {
           Back to Products
         </Button>
       </Container>
+
+      {reviewsError && <div>Error: {reviewsError}</div>}
+      {reviews.length > 0 ? (
+        <div className={style.reviewsContainer}>
+          <h3>Customer Reviews</h3>
+          {reviews.map((review) => (
+            <div key={review.id} className={style.review}>
+              <Rating value={review.rating} readOnly />
+              <p>{review.reviewPlot}</p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No reviews yet. Be the first to review this product!</p>
+      )}
 
       {/* Login Modal */}
       <LoginModal open={loginModalOpen} handleClose={() => setLoginModalOpen(false)} />

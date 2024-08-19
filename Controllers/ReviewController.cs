@@ -16,7 +16,7 @@ namespace ReactShop.Controllers
             _reviewservice = reviewservice;
         }
 
-        
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -24,7 +24,7 @@ namespace ReactShop.Controllers
             return Ok(reviews);
         }
 
-        
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -36,10 +36,10 @@ namespace ReactShop.Controllers
             return Ok(review);
         }
 
-        [HttpPost("id")]
-        public async Task<IActionResult> GetListByProductId([FromBody] int id)
+        [HttpGet("product/{productId}")]
+        public async Task<IActionResult> GetListByProductId(int productId)
         {
-            var reviews = await _reviewservice.GetListByProductId(id);
+            var reviews = await _reviewservice.GetListByProductId(productId);
             return Ok(reviews);
         }
 

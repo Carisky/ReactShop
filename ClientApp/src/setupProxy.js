@@ -6,6 +6,7 @@ module.exports = function (app) {
       "/products",
       "/recommendedproducts",
       "/auth/login",
+      "/Review/product/*",
       "/admin/articles",
       "/ProductImages",
       "/admin/validation/",
